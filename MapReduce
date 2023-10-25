@@ -1,0 +1,34 @@
+A. Create a sample collection 'orders' with 10 documents:
+
+db.orders.insertMany([
+  { cust_id: "cust1", price: 100 },
+  { cust_id: "cust1", price: 50 },
+  { cust_id: "cust2", price: 200 },
+  { cust_id: "cust2", price: 150 },
+  { cust_id: "cust3", price: 300 },
+  { cust_id: "cust3", price: 250 },
+  { cust_id: "cust4", price: 400 },
+  { cust_id: "cust4", price: 350 },
+  { cust_id: "cust5", price: 500 },
+  { cust_id: "cust5", price: 450 }
+]);
+
+B. Perform the map-reduce operation on the 'orders' collection to group by the 'cust_id' and calculate the sum of the price for each 'cust_id':
+
+var mapFunction = function() {
+  emit(this.cust_id, this.price);
+};
+
+var reduceFunction = function(cust_id, prices) {
+  return Array.sum(prices);
+};
+
+db.orders.mapReduce(mapFunction, reduceFunction, { out: "total_price_per_customer" });
+
+This will create a new collection named 'total_price_per_customer' with the following documents:
+
+{ "_id" : "cust1", "value" : 150 }
+{ "_id" : "cust2", "value" : 350 }
+{ "_id" : "cust3", "value" : 550 }
+{ "_id" : "cust4", "value" : 750 }
+{ "_id" : "cust5", "value" : 950 }
