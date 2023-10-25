@@ -1,0 +1,48 @@
+CREATE TABLE products (
+    Product_name VARCHAR(255),
+    Brand_id INT,
+    Category_id INT,
+    model_year YEAR,
+    list_price INT
+);
+
+drop table products;
+
+INSERT INTO products (Product_name, Brand_id, Category_id, model_year, list_price) VALUES
+    ('Laptop', 1, 2, 2023, 999),
+    ('Smartphone', 2, 1, 2023, 599),
+    ('Tablet', 3, 2, 2022, 349),
+    ('Desktop Computer', 1, 2, 2023, 1299),
+    ('Camera', 4, 3, 2023, 799);
+
+
+delimiter /
+CREATE PROCEDURE ListD()
+BEGIN
+    
+    DECLARE done INT DEFAULT 0;
+    DECLARE prod_name VARCHAR(255);
+    DECLARE prod_price INT;
+   
+    
+    DECLARE cur CURSOR FOR
+        SELECT Product_name,list_price
+        FROM products;
+
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+
+    OPEN cur;
+    
+    read_loop: LOOP
+        FETCH cur INTO prod_name,prod_price;
+        IF done = 1 THEN
+            LEAVE read_loop;
+        END IF;
+
+        SELECT CONCAT('Name :',prod_name,' Price :',prod_price) AS Prod_Info;
+    END LOOP;
+    CLOSE cur;
+    
+END /
+
+delimiter ;
