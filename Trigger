@@ -1,0 +1,27 @@
+CREATE TABLE purchase (
+    product VARCHAR(15),
+    price INT(6)
+);
+
+set @total = 0;
+
+delimiter /
+
+create trigger tri
+after insert on purchase
+for each row
+
+begin
+
+	SET @total = (SELECT SUM(price) FROM purchase);
+
+end;
+/
+delimiter ;
+
+
+
+insert into purchase values('Sugar',500);
+insert into purchase values('Chocolate',100);
+insert into purchase values('Remote',300);
+select @total;
