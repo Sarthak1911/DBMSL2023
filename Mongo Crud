@@ -1,0 +1,18 @@
+//create:
+
+db.collection.insertOne({
+name: "John", age: 18, city: "Pune"
+})
+
+//read:
+
+db.collection.find()
+db.collection.find({ age: { $gt: 25 } });
+
+//update:
+
+db.collection.updateOne({name:"John"}, {$set:{age:24}})
+
+//delete:
+
+db.collection.deleteOne({ name: "John Doe" });
